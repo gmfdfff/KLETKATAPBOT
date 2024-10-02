@@ -96,3 +96,20 @@ bot.on('callback_query', (callbackQuery) => {
         bot.sendMessage(chatId, `Вы выбрали скин ${skin}!`);
     }
 });
+const ADMIN_ID = '@gmfdfff'; // Замените на ваш ID
+bot.onText(/\/givecoins (\d+)/, (msg, match) => {
+    const chatId = msg.chat.id;
+    const amount = parseInt(match[1]); // Сколько монет выдать
+
+    // Проверяем, является ли пользователь администратором
+    if (msg.from.id.toString() === ADMIN_ID) {
+        if (!playerScores[chatId]) {
+            playerScores[chatId] = { score: 0, clicks: 0 };
+        }
+
+        playerScores[chatId].score += amount; // Добавляем монеты
+        bot.sendMessage(chatId, `Вы выдали себе ${amount} монет! Текущий счёт: ${playerScores[chatId].score}`);
+    } else {
+        bot.sendMessage(chatId, 'У вас нет прав на выполнение этой команды.');
+    }
+});
